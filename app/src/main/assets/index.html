@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#173b2d">
-<title>Anglerprüfung Brandenburg — тренажёр</title>
+<title>Anglerprüfung Brandenburg — Trainer</title>
 <style>
 :root { --bg:#f4f6f4; --card:#fff; --ink:#17221d; --muted:#68766f; --accent:#173b2d; --ok:#157347; --bad:#b42318; --line:#dfe6e2; --soft:#e9f1ec; }
 *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -33,27 +33,27 @@ footer .nav{max-width:760px;margin:auto;display:grid;grid-template-columns:repea
 </style>
 </head>
 <body>
-<header><div class="title">🎣 Anglerprüfung Brandenburg</div><div class="sub">Тренажёр по присланному Prüfungsfragen.pdf</div></header>
+<header><div class="title">🎣 Anglerprüfung Brandenburg</div><div class="sub">Trainer für Prüfungsfragen</div></header>
 <main>
 <section id="home">
   <div class="card">
-    <div class="row between"><div><div class="stat">Вопросов из файла</div><div class="big">598</div></div><div><div class="stat">Изучено</div><div class="big" id="learnedN">0</div></div></div>
+    <div class="row between"><div><div class="stat">Fragen insgesamt</div><div class="big">598</div></div><div><div class="stat">Gelernt</div><div class="big" id="learnedN">0</div></div></div>
     <div class="progress" style="margin-top:12px"><i id="homeProg" style="width:0%"></i></div>
   </div>
   <div class="grid">
-    <button onclick="startStudy('all')">📚 Учить все</button>
-    <button onclick="startExam()">📝 Экзамен 60</button>
-    <button class="secondary" onclick="startStudy('wrong')">❌ Ошибки</button>
-    <button class="secondary" onclick="startStudy('fav')">⭐ Избранное</button>
+    <button onclick="startStudy('all')">📚 Alle lernen</button>
+    <button onclick="startExam()">📝 Prüfung 60</button>
+    <button class="secondary" onclick="startStudy('wrong')">❌ Fehler</button>
+    <button class="secondary" onclick="startStudy('fav')">⭐ Favoriten</button>
   </div>
   <div class="card">
-    <b>Разделы</b>
+    <b>Bereiche</b>
     <div id="sectionButtons" style="margin-top:10px"></div>
   </div>
-  <div class="notice">Источник содержит нумерацию до 600, но в самом PDF есть технические пропуски/сбои нумерации: нет напечатанных №5, №546 и №547; №6 напечатан дважды. Поэтому в тренажёре <b>598 фактических строк-вопросов</b>. Ничего не выдумано для заполнения отсутствующих строк. Вопрос №516 восстановлен из повреждённого текстового слоя PDF.</div>
+  <div class="notice">Die Quelle ist bis 600 nummeriert, enthält jedoch technische Lücken bzw. Fehler in der Nummerierung: Die gedruckten Nr. 5, 546 und 547 fehlen; Nr. 6 ist zweimal vorhanden. Deshalb enthält der Trainer <b>598 tatsächliche Fragen</b>. Fehlende Fragen wurden nicht ergänzt oder erfunden. Frage Nr. 516 wurde aus der beschädigten Textebene der PDF wiederhergestellt.</div>
   <div class="card">
-    <b>Перевод на русский</b>
-    <p class="small">Чтобы не вносить ошибки в официальные формулировки, немецкий оригинал хранится без изменений. Кнопка «RU перевод» открывает текущий вопрос и ответы в Google Translate. Сам тренажёр работает офлайн; для перевода нужен интернет.</p>
+    <b>Übersetzung</b>
+    <p class="small">Die Fragen sind im deutschen Original gespeichert. Übersetzungen können direkt im Trainer über die Schaltflächen DE, RU, UA und TR angezeigt werden. Der Trainer funktioniert offline.</p>
   </div>
 </section>
 
@@ -72,23 +72,23 @@ footer .nav{max-width:760px;margin:auto;display:grid;grid-template-columns:repea
 <button class="secondary" id="lang-uk" onclick="setLang('uk')">UA</button>
 <button class="secondary" id="lang-tr" onclick="setLang('tr')">TR</button>
 </span>
-      <button id="nextBtn" class="hidden" onclick="nextQuestion()">Дальше →</button>
+      <button id="nextBtn" class="hidden" onclick="nextQuestion()">Weiter →</button>
     </div>
   </div>
-  <button class="ghost" onclick="goHome()">← На главную</button>
+  <button class="ghost" onclick="goHome()">← Zur Startseite</button>
 </section>
 
 <section id="result" class="hidden">
-  <div class="card"><div class="stat">Результат экзамена</div><div class="big" id="scoreBig"></div><div id="passText" style="font-weight:800;margin-top:6px"></div></div>
+  <div class="card"><div class="stat">Prüfungsergebnis</div><div class="big" id="scoreBig"></div><div id="passText" style="font-weight:800;margin-top:6px"></div></div>
   <div class="card" id="sectionResults"></div>
-  <div class="grid"><button onclick="startExam()">Повторить экзамен</button><button class="secondary" onclick="startStudy('wrong')">Разобрать ошибки</button></div>
+  <div class="grid"><button onclick="startExam()">Prüfung wiederholen</button><button class="secondary" onclick="startStudy('wrong')">Fehler üben</button></div>
 </section>
 
 <section id="browse" class="hidden">
   <div class="card">
-    <input id="searchBox" placeholder="Поиск по немецкому тексту..." oninput="renderBrowse()">
+    <input id="searchBox" placeholder="Im deutschen Text suchen..." oninput="renderBrowse()">
     <select id="filterSection" onchange="renderBrowse()" style="margin-top:8px">
-      <option value="all">Все разделы</option>
+      <option value="all">Alle Bereiche</option>
       <option value="I">I — Fischkunde und -hege</option>
       <option value="II">II — Pflege der Fischgewässer</option>
       <option value="III">III — Fanggeräte und deren Gebrauch</option>
@@ -101,10 +101,10 @@ footer .nav{max-width:760px;margin:auto;display:grid;grid-template-columns:repea
 </main>
 
 <footer><div class="nav">
-<button onclick="goHome()">🏠 Главная</button>
-<button onclick="showBrowse()">🔎 Вопросы</button>
-<button onclick="startStudy('wrong')">❌ Ошибки</button>
-<button onclick="resetProgress()">↺ Сброс</button>
+<button onclick="goHome()">🏠 Startseite</button>
+<button onclick="showBrowse()">🔎 Fragen</button>
+<button onclick="startStudy('wrong')">❌ Fehler</button>
+<button onclick="resetProgress()">↺ Zurücksetzen</button>
 </div></footer>
 
 <script>
@@ -138,7 +138,7 @@ function startStudy(kind){
  else if(kind==='wrong') pool=QUESTIONS.filter(q=>st(q).wrong>st(q).correct);
  else if(kind==='fav') pool=QUESTIONS.filter(q=>st(q).fav);
  else pool=QUESTIONS.filter(q=>q.sg===kind);
- if(!pool.length){alert(kind==='fav'?'Избранных вопросов пока нет.':'В этой группе пока нет вопросов.');return}
+ if(!pool.length){alert(kind==='fav'?'Noch keine Favoriten vorhanden.':'In dieser Gruppe sind noch keine Fragen vorhanden.');return}
  session=shuffle(pool);idx=0;exam=false;examAnswers=[];show('quiz');renderQuestion();
 }
 function startExam(){
@@ -151,11 +151,11 @@ function startExam(){
 }
 function renderQuestion(){
  const q=session[idx], s=st(q);
- document.getElementById('modePill').textContent=exam?'Экзамен':'Обучение';
+ document.getElementById('modePill').textContent=exam?'Prüfung':'Training';
  document.getElementById('counter').textContent=`${idx+1} / ${session.length}`;
  document.getElementById('quizProg').style.width=((idx)/session.length*100)+'%';
  document.getElementById('sectionPill').textContent=`${q.sg} — ${NAMES[q.sg]}`;
- document.getElementById('sourceNo').textContent=`№ в PDF: ${q.printed_no} · FNR ${q.fnr}`;
+ document.getElementById('sourceNo').textContent=`Nr. im PDF: ${q.printed_no} · FNR ${q.fnr}`;
  document.getElementById('question').textContent=q.q;
   renderTranslation(q);
  document.getElementById('favBtn').textContent=s.fav?'★':'☆';
@@ -191,10 +191,10 @@ function finishExam(){
  const per={}; Object.keys(NAMES).forEach(s=>per[s]=examAnswers.filter(x=>x.sg===s&&x.ok).length);
  const passed=good>=45 && Object.values(per).every(x=>x>=6);
  document.getElementById('scoreBig').textContent=`${good} / 60`;
- document.getElementById('passText').textContent=passed?'✅ BESTANDEN — сдано':'❌ NICHT BESTANDEN — не сдано';
+ document.getElementById('passText').textContent=passed?'✅ BESTANDEN — BESTANDEN':'❌ NICHT BESTANDEN — NICHT BESTANDEN';
  document.getElementById('passText').style.color=passed?'var(--ok)':'var(--bad)';
- document.getElementById('sectionResults').innerHTML='<b>По разделам</b>'+Object.keys(NAMES).map(s=>`<div class="listitem"><b>${s}</b> — ${per[s]} / 12 ${per[s]>=6?'✅':'❌'}</div>`).join('')+
- '<div class="small" style="margin-top:10px">Критерий в тренажёре: минимум 45/60 и минимум 6/12 в каждом из пяти разделов.</div>';
+ document.getElementById('sectionResults').innerHTML='<b>Nach Bereichen</b>'+Object.keys(NAMES).map(s=>`<div class="listitem"><b>${s}</b> — ${per[s]} / 12 ${per[s]>=6?'✅':'❌'}</div>`).join('')+
+ '<div class="small" style="margin-top:10px">Kriterium im Trainer: mindestens 45/60 und mindestens 6/12 in jedem der fünf Bereiche.</div>';
  show('result');
 }
 function toggleFav(){
@@ -253,7 +253,7 @@ function renderTranslation(q){
 
   if(!tr || !tr.q){
     box.classList.remove('hidden');
-    box.innerHTML='<div class="small">Перевод для этого вопроса пока не добавлен.</div>';
+    box.innerHTML='<div class="small">Für diese Frage ist noch keine Übersetzung verfügbar.</div>';
     return;
   }
 
@@ -275,9 +275,9 @@ function showBrowse(){show('browse');renderBrowse()}
 function renderBrowse(){
  const term=document.getElementById('searchBox').value.toLowerCase().trim(), sec=document.getElementById('filterSection').value;
  let p=QUESTIONS.filter(q=>(sec==='all'||q.sg===sec)&&(!term||(q.q+' '+q.a+' '+q.b+' '+q.c).toLowerCase().includes(term))).slice(0,150);
- document.getElementById('browseList').innerHTML=p.map(q=>`<div class="listitem"><div class="small">${q.sg} · №${q.printed_no}</div><b>${escapeHtml(q.q)}</b><div class="small" style="margin-top:5px">✓ ${escapeHtml(q.a)}</div></div>`).join('') || '<div class="small">Ничего не найдено.</div>';
+ document.getElementById('browseList').innerHTML=p.map(q=>`<div class="listitem"><div class="small">${q.sg} · №${q.printed_no}</div><b>${escapeHtml(q.q)}</b><div class="small" style="margin-top:5px">✓ ${escapeHtml(q.a)}</div></div>`).join('') || '<div class="small">Nichts gefunden.</div>';
 }
-function resetProgress(){if(confirm('Удалить весь прогресс, ошибки и избранное?')){stats={};store.set(stats);renderHome()}}
+function resetProgress(){if(confirm('Gesamten Fortschritt, Fehler und Favoriten löschen?')){stats={};store.set(stats);renderHome()}}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 loadTranslations();
 renderHome();
