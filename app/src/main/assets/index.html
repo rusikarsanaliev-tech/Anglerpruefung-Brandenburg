@@ -66,7 +66,12 @@ footer .nav{max-width:760px;margin:auto;display:grid;grid-template-columns:repea
     <div class="q" id="question"></div>
     <div id="answers"></div>
     <div class="row" style="margin-top:12px">
-      <button class="secondary" onclick="openTranslate()">🇷🇺 RU перевод</button>
+      <span id="languageButtons" style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="secondary" id="lang-de" onclick="setLang('de')">DE</button>
+<button class="secondary" id="lang-ru" onclick="setLang('ru')">RU</button>
+<button class="secondary" id="lang-uk" onclick="setLang('uk')">UA</button>
+<button class="secondary" id="lang-tr" onclick="setLang('tr')">TR</button>
+</span>
       <button id="nextBtn" class="hidden" onclick="nextQuestion()">Дальше →</button>
     </div>
   </div>
@@ -152,6 +157,7 @@ function renderQuestion(){
  document.getElementById('sectionPill').textContent=`${q.sg} — ${NAMES[q.sg]}`;
  document.getElementById('sourceNo').textContent=`№ в PDF: ${q.printed_no} · FNR ${q.fnr}`;
  document.getElementById('question').textContent=q.q;
+  renderTranslation(q);
  document.getElementById('favBtn').textContent=s.fav?'★':'☆';
  document.getElementById('nextBtn').classList.add('hidden');
  const choices=[{text:q.a,orig:0},{text:q.b,orig:1},{text:q.c,orig:2}];
@@ -194,6 +200,71 @@ function finishExam(){
 function toggleFav(){
  const q=session[idx],s=st(q);s.fav=!s.fav;save(q,s);document.getElementById('favBtn').textContent=s.fav?'★':'☆';
 }
+
+let currentLang='de';
+const translationMaps={ru:new Map(),uk:new Map(),tr:new Map()};
+
+async function loadTranslations(){
+  for(const lang of ['ru','uk','tr']){
+    try{
+      const r=await fetch(`questions-${lang}.json`);
+      const data=await r.json();
+      translationMaps[lang]=new Map(data.map(x=>[x.id,x]));
+    }catch(e){
+      console.log('Translation load error:',lang,e);
+    }
+  }
+}
+
+function setLang(lang){
+  currentLang=lang;
+
+  ['de','ru','uk','tr'].forEach(x=>{
+    const b=document.getElementById('lang-'+x);
+    if(b) b.style.fontWeight=(x===lang?'700':'400');
+  });
+
+  if(session.length && session[idx]) renderTranslation(session[idx]);
+}
+
+function renderTranslation(q){
+  let box=document.getElementById('translationBox');
+
+  if(!box){
+    box=document.createElement('div');
+    box.id='translationBox';
+    box.className='hidden';
+    box.style.marginTop='14px';
+    box.style.padding='12px';
+    box.style.border='1px solid #bbb';
+    box.style.borderRadius='10px';
+
+    const answers=document.getElementById('answers');
+    answers.insertAdjacentElement('afterend',box);
+  }
+
+  if(currentLang==='de'){
+    box.classList.add('hidden');
+    box.innerHTML='';
+    return;
+  }
+
+  const tr=translationMaps[currentLang].get(q.id);
+
+  if(!tr || !tr.q){
+    box.classList.remove('hidden');
+    box.innerHTML='<div class="small">Перевод для этого вопроса пока не добавлен.</div>';
+    return;
+  }
+
+  box.classList.remove('hidden');
+  box.innerHTML=
+    `<b>${escapeHtml(tr.q)}</b>
+     <div style="margin-top:10px">A: ${escapeHtml(tr.a)}</div>
+     <div>B: ${escapeHtml(tr.b)}</div>
+     <div>C: ${escapeHtml(tr.c)}</div>`;
+}
+
 function openTranslate(){
  const q=session[idx];
  const t=`Frage: ${q.q}\nA: ${q.a}\nB: ${q.b}\nC: ${q.c}`;
@@ -208,6 +279,7 @@ function renderBrowse(){
 }
 function resetProgress(){if(confirm('Удалить весь прогресс, ошибки и избранное?')){stats={};store.set(stats);renderHome()}}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+loadTranslations();
 renderHome();
 </script>
 </body></html>
